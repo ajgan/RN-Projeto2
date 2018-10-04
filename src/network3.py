@@ -57,10 +57,21 @@ else:
         "network3.py to set\nthe GPU flag to True."
 
 #### Load the MNIST data
-def load_data_shared(filename="../data/mnist.pkl.gz"):
+def load_data_shared(filename="../data/mnist.pkl.gz", number=-1):
     f = gzip.open(filename, 'rb')
     training_data, validation_data, test_data = cPickle.load(f)
     f.close()
+
+    if (number > -1):
+        newTest = []
+        newTestLabel = []
+        for i in range(len(test_data[1])):
+            if (test_data[1][i] == number):
+                newTest.append(test_data[0][i])
+                newTestLabel.append(test_data[1][i])
+        test_data = []
+        test_data = [newTest, newTestLabel]
+
     def shared(data):
         """Place the data into shared variables.  This allows Theano to copy
         the data to the GPU, if one is available.
@@ -159,7 +170,7 @@ class Network(object):
                 if (iteration+1) % num_training_batches == 0:
                     validation_accuracy = np.mean(
                         [validate_mb_accuracy(j) for j in xrange(num_validation_batches)])
-                    print("Epoch {0}: ".format(epoch))
+                    # print("Epoch {0}: ".format(epoch))
                     if validation_accuracy >= best_validation_accuracy:
                         ##print("This is the best validation accuracy to date.")
                         best_validation_accuracy = validation_accuracy
@@ -167,7 +178,7 @@ class Network(object):
                     if test_data:
                         test_accuracy = np.mean(
                             [test_mb_accuracy(j) for j in xrange(num_test_batches)])
-                        print('Test accuracy is {0:.2%}'.format(test_accuracy))
+                        print("Epoch {0}: {1:.2%}".format(epoch,test_accuracy))
                         if test_accuracy >= best_test_accuracy:
                             ##print("This is the best validation accuracy to date.")
                             best_test_accuracy = test_accuracy
