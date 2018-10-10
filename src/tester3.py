@@ -2,7 +2,7 @@ import network3
 from network3 import Network
 from network3 import ConvPoolLayer, FullyConnectedLayer, SoftmaxLayer
 
-training_data, validation_data, test_data = network3.load_data_shared(number=9)
+training_data, validation_data, test_data = network3.load_data_shared(number=-1)
 mini_batch_size = 10
 
 # net = Network([
